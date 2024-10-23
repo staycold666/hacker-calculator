@@ -80,25 +80,32 @@ body {
     position: relative;
     background: rgba(0, 20, 0, 0.8);
     padding: 30px;
-    border-radius: 15px;
+    border-radius: 0 0 15px 15px;
     box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
     border: 2px solid #00ff00;
     backdrop-filter: blur(5px);
     z-index: 1;
+    margin-top: 35px;
 }
 
 /* Terminal Window Header */
 .container::before {
     content: "SECURE_CALCULATOR.exe";
     position: absolute;
-    top: -30px;
-    left: 0;
-    width: 100%;
-    padding: 5px 15px;
+    top: -35px;
+    left: -2px;
+    right: -2px;
+    height: 35px;
     background: #00ff00;
     color: #000;
     font-size: 14px;
     border-radius: 10px 10px 0 0;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    border: 2px solid #00ff00;
+    border-bottom: none;
+    box-sizing: border-box;
 }
 
 .calculator {
