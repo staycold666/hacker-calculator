@@ -13,17 +13,99 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background Terminal Text - Layer 1 */
+.terminal-bg-1 {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 300%;
+    background: repeating-linear-gradient(
+        180deg,
+        transparent 0,
+        transparent 40px,
+        rgba(0, 255, 0, 0.15) 40px,
+        rgba(0, 255, 0, 0.15) 80px
+    );
+    animation: scroll1 20s linear infinite;
+    pointer-events: none;
+    z-index: -3;
+}
+
+/* Background Terminal Text - Layer 2 */
+.terminal-bg-2 {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 300%;
+    background: repeating-linear-gradient(
+        180deg,
+        transparent 0,
+        transparent 35px,
+        rgba(0, 255, 0, 0.1) 35px,
+        rgba(0, 255, 0, 0.1) 70px
+    );
+    animation: scroll2 15s linear infinite;
+    pointer-events: none;
+    z-index: -2;
+}
+
+/* Scrolling Text Content */
+.terminal-text {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.text-line {
+    position: absolute;
+    color: rgba(0, 255, 0, 0.2);
+    font-size: 14px;
+    white-space: nowrap;
+    animation: scrollText 20s linear infinite;
 }
 
 .container {
     position: relative;
+    background: rgba(0, 20, 0, 0.8);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+    border: 2px solid #00ff00;
+    backdrop-filter: blur(5px);
+    z-index: 1;
+}
+
+/* Terminal Window Header */
+.container::before {
+    content: "SECURE_CALCULATOR.exe";
+    position: absolute;
+    top: -30px;
+    left: 0;
+    width: 100%;
+    padding: 5px 15px;
+    background: #00ff00;
+    color: #000;
+    font-size: 14px;
+    border-radius: 10px 10px 0 0;
 }
 
 .calculator {
-    background: #0a0a0a;
+    background: rgba(10, 10, 10, 0.9);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 15px #00ff00;
+    box-shadow: inset 0 0 15px rgba(0, 255, 0, 0.3);
     border: 1px solid #00ff00;
 }
 
@@ -34,6 +116,9 @@ body {
     margin-bottom: 20px;
     border: 1px solid #00ff00;
     border-radius: 5px;
+    box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.2);
+    display: flex;
+    align-items: center;
 }
 
 .overlay-text {
@@ -43,6 +128,22 @@ body {
     color: #00ff00;
     opacity: 0.5;
     font-size: 0.8em;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.easter-egg {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    color: #00ff00;
+    font-size: 1.2em;
+    text-shadow: 0 0 5px #00ff00;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.easter-egg.visible {
+    opacity: 1;
 }
 
 #result {
@@ -54,6 +155,8 @@ body {
     font-size: 1.5em;
     text-align: right;
     outline: none;
+    text-shadow: 0 0 5px #00ff00;
+    padding-left: 100px;
 }
 
 .buttons {
@@ -65,27 +168,41 @@ body {
 button {
     padding: 15px;
     border: 1px solid #00ff00;
-    background: #0a0a0a;
+    background: rgba(10, 10, 10, 0.9);
     color: #00ff00;
     font-size: 1.2em;
     cursor: pointer;
     border-radius: 5px;
     transition: all 0.3s ease;
+    text-shadow: 0 0 5px #00ff00;
+    position: relative;
+    overflow: hidden;
 }
 
 button:hover {
     background: #00ff00;
     color: #000;
-    box-shadow: 0 0 10px #00ff00;
+    box-shadow: 0 0 15px #00ff00;
+}
+
+button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: #00ff00;
+    animation: glitch-line 2s linear infinite;
 }
 
 .operator {
-    background: #0d1a0d;
+    background: rgba(13, 26, 13, 0.9);
 }
 
 .equals {
     grid-column: span 2;
-    background: #0d1a0d;
+    background: rgba(13, 26, 13, 0.9);
 }
 
 /* CRT Effect */
@@ -96,21 +213,14 @@ button:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-        transparent 0%,
-        rgba(0, 255, 0, 0.1) 50%,
-        transparent 100%
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15) 0px,
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 2px
     );
-    animation: scan 7s linear infinite;
-}
-
-@keyframes scan {
-    0% {
-        transform: translateY(-100%);
-    }
-    100% {
-        transform: translateY(100%);
-    }
+    pointer-events: none;
 }
 
 /* Glitch Effect */
@@ -127,6 +237,33 @@ button:hover {
     animation: glitch 0.3s infinite;
 }
 
+@keyframes scroll1 {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-66.67%);
+    }
+}
+
+@keyframes scroll2 {
+    0% {
+        transform: translateY(-33.33%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes scrollText {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
 @keyframes glitch {
     0% {
         opacity: 0;
@@ -140,4 +277,42 @@ button:hover {
     100% {
         opacity: 0;
     }
+}
+
+@keyframes glitch-line {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* CRT flicker */
+@keyframes flicker {
+    0% {
+        opacity: 0.97;
+    }
+    5% {
+        opacity: 0.95;
+    }
+    10% {
+        opacity: 0.9;
+    }
+    15% {
+        opacity: 0.95;
+    }
+    20% {
+        opacity: 0.9;
+    }
+    25% {
+        opacity: 0.95;
+    }
+    30% {
+        opacity: 1;
+    }
+}
+
+.display {
+    animation: flicker 4s infinite;
 }
